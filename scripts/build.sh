@@ -26,7 +26,7 @@ jq -e '
     (.name | type == "string" and test("^[A-Za-z0-9_.-]+$")) and
     (.repo | type == "string" and test("^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")) and
     (.asset_pattern | type == "string" and length > 0) and
-    (.target | type == "string" and test("^deps/manifests/[A-Za-z0-9_.-]+\\.json$"))
+    (.target | type == "string" and test("^manifests/[A-Za-z0-9_.-]+\\.json$"))
   )
 ' "${config}" >/dev/null
 
@@ -40,7 +40,7 @@ jq -c '.manifests[]' "${config}" | while IFS= read -r manifest; do
   target="$(jq -r '.target' <<< "${manifest}")"
 
   case "${target}" in
-    deps/manifests/*.json) ;;
+    manifests/*.json) ;;
     *)
       echo "invalid target path for ${name}: ${target}" >&2
       exit 1

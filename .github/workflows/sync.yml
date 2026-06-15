@@ -70,7 +70,7 @@ jobs:
         #   no_check_bucket = true
         #
         # Example RCLONE_DESTINATION variable/secret:
-        #   deps:cli-podplane-dev
+        #   deps:deps-podplane-dev
         env:
           RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
           RCLONE_DESTINATION: ${{ vars.RCLONE_DESTINATION || secrets.RCLONE_DESTINATION }}

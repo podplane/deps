@@ -1,7 +1,7 @@
 # Podplane Dependencies
 
 This repository publishes the static dependency manifests served from
-`https://cli.podplane.dev/deps/manifests/`.
+`https://deps.podplane.dev/manifests/`.
 
 The manifest-producing repositories remain the source of truth for release
 artifacts. This repository only mirrors the latest released manifest assets into
@@ -12,13 +12,13 @@ a static object-storage bucket.
 The build writes these public paths:
 
 ```text
-/deps/manifests/components.json
-/deps/manifests/templates.json
-/deps/manifests/seeds.json
-/deps/manifests/vmconfig_knd_debian-13_amd64.json
-/deps/manifests/vmconfig_knd_debian-13_arm64.json
-/deps/manifests/vmconfig_knc_debian-13_amd64.json
-/deps/manifests/vmconfig_knc_debian-13_arm64.json
+/manifests/components.json
+/manifests/templates.json
+/manifests/seeds.json
+/manifests/vmconfig_knd_debian-13_amd64.json
+/manifests/vmconfig_knd_debian-13_arm64.json
+/manifests/vmconfig_knc_debian-13_amd64.json
+/manifests/vmconfig_knc_debian-13_arm64.json
 ```
 
 ## How publishing works
@@ -28,7 +28,7 @@ The build writes these public paths:
    source repository.
 3. It downloads the matching JSON release asset.
 4. It validates that the asset is JSON.
-5. It writes the file under `dist/deps/manifests/`.
+5. It writes the file under `dist/manifests/`.
 6. The GitHub Action uses `rclone sync` to publish `dist/` to the configured
    object-storage destination.
 
@@ -61,7 +61,7 @@ RCLONE_CONFIG       # secret containing a complete rclone config file
 RCLONE_DESTINATION  # variable or secret, for example: `deps:<bucket-name>`
 ```
 
-The public DNS name `cli.podplane.dev` points at the object-storage bucket
+The public DNS name `deps.podplane.dev` points at the object-storage bucket
 configured by `RCLONE_DESTINATION`. If the backing store changes later, only the
 rclone config/destination should need to change; the generated `dist/` tree and
 public URL layout stay the same.
