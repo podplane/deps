@@ -1,0 +1,94 @@
+# Podplane <https://podplane.dev>
+# Copyright The Podplane Authors
+# SPDX-License-Identifier: Apache-2.0
+
+name: sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_repo:
+        description: "Repository that requested the sync"
+        required: false
+        type: string
+      source_ref:
+        description: "Ref or tag that requested the sync"
+        required: false
+        type: string
+  schedule:
+    - cron: "*/30 * * * *"
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show sync request context
+        env:
+          SOURCE_REPO: ${{ inputs.source_repo }}
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          echo "event=${GITHUB_EVENT_NAME}"
+          printf 'source_repo=%s\n' "${SOURCE_REPO}"
+          printf 'source_ref=%s\n' "${SOURCE_REF}"
+
+      - name: Build manifests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: make build
+
+      - name: Install rclone
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y rclone
+
+      - name: Sync manifests
+        # Storage is configured through generic rclone settings so the workflow
+        # is not tied to a specific object-storage provider.
+        #
+        # Example RCLONE_CONFIG secret for Cloudflare R2:
+        #   [deps]
+        #   type = s3
+        #   provider = Cloudflare
+        #   access_key_id = <access-key-id>
+        #   secret_access_key = <secret-access-key>
+        #   endpoint = https://<account-id>.r2.cloudflarestorage.com
+        #   no_check_bucket = true
+        #
+        # Example RCLONE_DESTINATION variable/secret:
+        #   deps:cli-podplane-dev
+        env:
+          RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
+          RCLONE_DESTINATION: ${{ vars.RCLONE_DESTINATION || secrets.RCLONE_DESTINATION }}
+        run: |
+          set -euo pipefail
+          test -n "${RCLONE_CONFIG_TEXT}"
+          test -n "${RCLONE_DESTINATION}"
+
+          config="${RUNNER_TEMP}/rclone.conf"
+          printf '%s\n' "${RCLONE_CONFIG_TEXT}" > "${config}"
+          chmod 600 "${config}"
+
+          echo "generated files:"
+          find dist -type f | sort
+
+          rclone --config "${config}" sync dist "${RCLONE_DESTINATION}" \
+            --max-delete 20 \
+            --verbose
+
+          echo "remote files:"
+          rclone --config "${config}" lsf --recursive "${RCLONE_DESTINATION}" | sort
