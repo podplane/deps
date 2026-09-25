@@ -87,8 +87,13 @@ jobs:
           find dist -type f | sort
 
           rclone --config "${config}" sync dist "${RCLONE_DESTINATION}" \
+            --checksum \
             --max-delete 20 \
+            --s3-no-head \
             --verbose
+
+          rclone --config "${config}" check dist "${RCLONE_DESTINATION}" \
+            --download
 
           echo "remote files:"
           rclone --config "${config}" lsf --recursive "${RCLONE_DESTINATION}" | sort

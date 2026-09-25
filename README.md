@@ -30,10 +30,13 @@ The build writes these public paths:
 4. It validates that the asset is JSON.
 5. It writes the file under `dist/manifests/`.
 6. The GitHub Action uses `rclone sync` to publish `dist/` to the configured
-   object-storage destination.
+   object-storage destination and downloads each remote file to verify its
+   contents.
 
 If the build step fails, the workflow fails before the `rclone sync` step runs,
-so incomplete or invalid generated output is not published.
+so incomplete or invalid generated output is not published. The sync compares
+checksums instead of modification times because each build downloads fresh
+copies of the release assets.
 
 ## Local build
 
