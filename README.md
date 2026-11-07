@@ -19,6 +19,10 @@ The build writes these public paths:
 /manifests/vmconfig_knd_debian-13_arm64.json
 /manifests/vmconfig_knc_debian-13_amd64.json
 /manifests/vmconfig_knc_debian-13_arm64.json
+/manifests/vmconfig_nst_debian-13_amd64.json
+/manifests/vmconfig_nst_debian-13_arm64.json
+/manifests/vmconfig_nat_debian-13_amd64.json
+/manifests/vmconfig_nat_debian-13_arm64.json
 ```
 
 ## How publishing works

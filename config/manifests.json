@@ -41,6 +41,30 @@
       "repo": "podplane/vmconfig",
       "asset_pattern": "^vmconfig_[0-9A-Za-z.+-]+_knc_debian-13_arm64\\.json$",
       "target": "manifests/vmconfig_knc_debian-13_arm64.json"
+    },
+    {
+      "name": "vmconfig_nst_debian-13_amd64",
+      "repo": "podplane/vmconfig",
+      "asset_pattern": "^vmconfig_[0-9A-Za-z.+-]+_nst_debian-13_amd64\\.json$",
+      "target": "manifests/vmconfig_nst_debian-13_amd64.json"
+    },
+    {
+      "name": "vmconfig_nst_debian-13_arm64",
+      "repo": "podplane/vmconfig",
+      "asset_pattern": "^vmconfig_[0-9A-Za-z.+-]+_nst_debian-13_arm64\\.json$",
+      "target": "manifests/vmconfig_nst_debian-13_arm64.json"
+    },
+    {
+      "name": "vmconfig_nat_debian-13_amd64",
+      "repo": "podplane/vmconfig",
+      "asset_pattern": "^vmconfig_[0-9A-Za-z.+-]+_nat_debian-13_amd64\\.json$",
+      "target": "manifests/vmconfig_nat_debian-13_amd64.json"
+    },
+    {
+      "name": "vmconfig_nat_debian-13_arm64",
+      "repo": "podplane/vmconfig",
+      "asset_pattern": "^vmconfig_[0-9A-Za-z.+-]+_nat_debian-13_arm64\\.json$",
+      "target": "manifests/vmconfig_nat_debian-13_arm64.json"
     }
   ]
 }
